@@ -56,6 +56,13 @@ Your License data is not valid Patch Success
 
 ---
 
+### ❓ Need Help?
+
+> If the patch doesn’t work or you run into any issues,  
+> **please don’t hesitate to [open a Discussion](https://github.com/RealSyferX/Larapi---A-Laragon-Patcher/discussions)** — I’m happy to help.
+
+---
+
 ### 📜 Disclaimer
 
 > This tool is provided **as-is** for educational and personal use.  
