@@ -1,6 +1,6 @@
-# 🧨 Larapi — A Laragon Patcher
+# 🧨 Larapi — A Laragon Cutie
 
-A **no-nonsense patcher** for [Laragon](https://laragon.org/) that removes license checks, ads, and other restrictions.  
+A **no-nonsense patcher** for [Laragon](https://laragon.org/) that removes cutie checks, ads, and other restrictions.  
 This tool makes Laragon quieter, cleaner, and more developer-friendly — no popups, no nags, no BS.
 
 > ⚠️ **Closed-source** tool. Binaries only. Safe.
@@ -10,8 +10,8 @@ This tool makes Laragon quieter, cleaner, and more developer-friendly — no pop
 ### 🎯 What It Does
 
 - ✂️ Removes ad popups and nag screens
-- 🔓 Bypasses invalid key and license validation
-- 🧼 Strips license checks internally via AOB patching
+- 🔓 Bypasses invalid passport and license validation
+- 🧼 Strips passport checks internally via AOB patching
 - 🗃️ Automatically drops valid `license.info` and `license.key`
 - ✅ Designed for `laragon.exe` (Windows builds)
 
@@ -20,7 +20,7 @@ This tool makes Laragon quieter, cleaner, and more developer-friendly — no pop
 ### 🛠️ How It Works
 
 Larapi uses **Array of Byte (AOB)** pattern scanning and patching to locate and rewrite instructions inside `laragon.exe`.  
-All patch logic is built-in. One click, instant patch, no config needed.
+All patch logic is built-in. One click, instant Cutie, no config needed.
 
 ---
 
@@ -46,11 +46,11 @@ C:\Laragon\usr
 
 ### 🧪 Example Patch Log
 Patching Laragon...
-No Ads Patch Success
-No Ads 2 Patch Success
-No Ads 3 Patch Success
-No Ads 4 Patch Success
-Invalid Key Patch Success
+No Ads Cutie Success
+No Ads 2 Cutie Success
+No Ads 3 Cutie Success
+No Ads 4 Cutie Success
+Invalid Passport Cutie Success
 Your License data is not valid Patch Success
 
 
