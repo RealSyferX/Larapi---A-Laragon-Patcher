@@ -1,4 +1,4 @@
-Imports System.IO
+﻿Imports System.IO
 Public Class Faceless
     Public Shared Function PatchAOB(filePath As String, originalPattern As String, patchPattern As String) As Boolean
         Try
