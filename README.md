@@ -1,4 +1,4 @@
-🧨 Larapi — A Laragon Cutie
+# 🧨 Larapi — A Laragon Cutie
 A no-nonsense patcher for Laragon that removes cutie checks, ads, and other restrictions.
 This tool makes Laragon quieter, cleaner, and more developer-friendly — no popups, no nags, no BS.
 
@@ -7,7 +7,7 @@ This tool makes Laragon quieter, cleaner, and more developer-friendly — no pop
 ![image](https://github.com/user-attachments/assets/2fcfcc26-2e12-49f2-b1b3-a361ec00a2fd)
 
 
-🚀 How to Use
+# 🚀 How to Use
 1) Download or build Larapi.exe
 2) Run it as Administrator
 3) Make sure C:\Laragon\laragon.exe exists
@@ -15,7 +15,7 @@ This tool makes Laragon quieter, cleaner, and more developer-friendly — no pop
 -- Done. Laragon is now fully patched and ad-free
 
 
-📜 Disclaimer
+# 📜 Disclaimer
 This tool is provided as-is for educational and personal use.
 We are not responsible for any damage or consequences.
 This project is not affiliated with Laragon in any way.
