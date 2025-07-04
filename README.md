@@ -6,6 +6,8 @@ This tool makes Laragon quieter, cleaner, and more developer-friendly — no pop
 
 ![image](https://github.com/user-attachments/assets/2fcfcc26-2e12-49f2-b1b3-a361ec00a2fd)
 
+YT VIDEO <br>
+[![Watch on YouTube](https://img.youtube.com/vi/ZoYviG6fmb8/hqdefault.jpg)](https://www.youtube.com/watch?v=ZoYviG6fmb8)
 
 # 🚀 How to Use
 1) Download or build Larapi.exe
