@@ -1,19 +1,27 @@
-﻿Imports System.IO
+Imports System.IO
+Imports Microsoft.Win32
+
 Public Class Faceless
     Public Shared Function PatchAOB(filePath As String, originalPattern As String, patchPattern As String) As Boolean
         Try
             Dim fileBytes As Byte() = File.ReadAllBytes(filePath)
-            Dim findBytes As Byte() = AOBStringToBytes(originalPattern)
-            Dim replaceBytes As Byte() = AOBStringToBytes(patchPattern)
 
-            If findBytes.Length <> replaceBytes.Length Then
+            Dim findMask As Byte?() = AOBStringToBytesWithWildcards(originalPattern)
+            Dim patchMask As Byte?() = AOBStringToBytesWithWildcards(patchPattern)
+
+            If findMask.Length <> patchMask.Length Then
                 Throw New Exception("AOB lengths must match!")
             End If
 
-            Dim index As Integer = FindPattern(fileBytes, findBytes)
+            Dim index As Integer = FindPatternWithWildcards(fileBytes, findMask)
             If index = -1 Then Return False
 
-            Array.Copy(replaceBytes, 0, fileBytes, index, replaceBytes.Length)
+            For i As Integer = 0 To patchMask.Length - 1
+                If patchMask(i).HasValue Then
+                    fileBytes(index + i) = patchMask(i).Value
+                End If
+            Next
+
             File.WriteAllBytes(filePath, fileBytes)
             Return True
         Catch ex As Exception
@@ -22,15 +30,26 @@ Public Class Faceless
         End Try
     End Function
 
-    Private Shared Function AOBStringToBytes(aob As String) As Byte()
-        Return aob.Trim().Split(" "c).Select(Function(b) Convert.ToByte(b, 16)).ToArray()
+    Private Shared Function AOBStringToBytesWithWildcards(aob As String) As Byte?()
+        Dim tokens = aob.Trim().Split(" "c)
+        Dim result As New List(Of Byte?)(tokens.Length)
+
+        For Each token In tokens
+            If token = "??" OrElse token = "?" Then
+                result.Add(Nothing)
+            Else
+                result.Add(Convert.ToByte(token, 16))
+            End If
+        Next
+
+        Return result.ToArray()
     End Function
 
-    Private Shared Function FindPattern(buffer As Byte(), pattern As Byte()) As Integer
+    Private Shared Function FindPatternWithWildcards(buffer As Byte(), pattern As Byte?()) As Integer
         For i As Integer = 0 To buffer.Length - pattern.Length
             Dim matched As Boolean = True
             For j As Integer = 0 To pattern.Length - 1
-                If buffer(i + j) <> pattern(j) Then
+                If pattern(j).HasValue AndAlso buffer(i + j) <> pattern(j).Value Then
                     matched = False
                     Exit For
                 End If
@@ -40,49 +59,78 @@ Public Class Faceless
         Return -1
     End Function
 
+
+
+    Public Sub SetLaragonLicense()
+        Try
+            Dim keyPath As String = "Software\Laragon"
+            Dim valueName As String = "license.key"
+            Dim valueData As String = "ACF5-44F7-A927-38B074625C55|531395EF-F61C-EC11-810D-E070EAEF3C24"
+
+            Using regKey As RegistryKey = Registry.CurrentUser.CreateSubKey(keyPath)
+                If regKey IsNot Nothing Then
+                    regKey.SetValue(valueName, valueData, RegistryValueKind.String)
+                    RichTextBox1.AppendText("License key written to registry successfully!" + vbNewLine)
+                Else
+                    RichTextBox1.AppendText("Failed to open registry key!" + vbNewLine)
+                End If
+            End Using
+
+        Catch ex As Exception
+            RichTextBox1.AppendText("Failed to write license key to registry: " & ex.Message + vbNewLine)
+        End Try
+    End Sub
+
     Public Sub GoPatch()
         Dim targetPath As String = "C:\laragon\laragon.exe"
 
         RichTextBox1.AppendText("Patching Laragon..." + vbNewLine)
-
+        SetLaragonLicense()
         'Exception Error Patch
         ''If Not Faceless.PatchAOB(targetPath, "C3 48 89 E5 48 8D A4 24 70 FF", "55 48 89 E5 48 8D A4 24 70 FF") Then RichTextBox1.AppendText("Exception Error Patch Failed" + vbNewLine)
         ''Buggy As Hell
 
         'No Ads Patch
-        ''NO FUCKING ANNOYING ADS IN LARAGON ANYMORE POPUP IN EVERY 5 MINUTES
-        If Not Faceless.PatchAOB(targetPath, "E8 1A EC 04 00 66 90 EB 56 66", "90 90 90 90 90 66 90 EB 56 66") Then
+        If Not Faceless.PatchAOB(targetPath, "E8 ?? ?? ?? ?? 66 90 EB ?? 66 90 48 ?? ?? ?? 48 8B",
+                                 "90 90 90 90 90 66 90 EB ?? 66 90 48 ?? ?? ?? 48 8B") Then
             RichTextBox1.AppendText("No Ads Patch Failed" + vbNewLine)
         Else
             RichTextBox1.AppendText("No Ads Patch Success" + vbNewLine)
         End If
-        If Not Faceless.PatchAOB(targetPath, "E8 EE 84 04 00 E8 59 CD 03 00", "90 90 90 90 90 E8 59 CD 03 00") Then
-            RichTextBox1.AppendText("No Ads Patch Failed" + vbNewLine)
+
+        If Not Faceless.PatchAOB(targetPath, "E8 ?? ?? ?? ?? E8 ?? ?? ?? ?? 84 C0 75 ?? 48 83", "90 90 90 90 90 E8 ?? ?? ?? ?? 84 C0 75 ?? 48 83") Then
+            RichTextBox1.AppendText("No Ads 2 Patch Failed" + vbNewLine)
         Else
             RichTextBox1.AppendText("No Ads 2 Patch Success" + vbNewLine)
         End If
 
-        If Not Faceless.PatchAOB(targetPath, "E8 B3 E2 FD FF 0F 1F 00 E8 4B", "90 90 90 90 90 0F 1F 00 E8 4B") Then
-            RichTextBox1.AppendText("No Ads Patch Failed" + vbNewLine)
+        If Not Faceless.PatchAOB(targetPath, "55 48 ?? ?? 48 ?? ?? ?? ?? 48 ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? ?? 90 80 ?? ?? ?? ?? ?? ?? 75",
+                                 "C3 48 ?? ?? 48 ?? ?? ?? ?? 48 ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? ?? 90 80 ?? ?? ?? ?? ?? ?? 75") Then
+            RichTextBox1.AppendText("No Ads 3 Patch Failed" + vbNewLine)
         Else
             RichTextBox1.AppendText("No Ads 3 Patch Success" + vbNewLine)
         End If
 
-        If Not Faceless.PatchAOB(targetPath, "74 4F 48 8D 4D F0 48 8D 15 CC", "75 4F 48 8D 4D F0 48 8D 15 CC") Then
-            RichTextBox1.AppendText("No Ads Patch Failed" + vbNewLine)
+        If Not Faceless.PatchAOB(targetPath, "E8 ?? ?? ?? ?? 90 48 ?? ?? ?? 5D C3 00 00 00 00 00 00 00 00 00 55 ?? ?? ?? 48 ?? ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? E8 ?? ?? ?? ?? 90 48 ?? ?? ?? 5D C3",
+                                 "E8 ?? ?? ?? ?? 90 48 ?? ?? ?? 5D C3 00 00 00 00 00 00 00 00 00 C3 ?? ?? ?? 48 ?? ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? E8 ?? ?? ?? ?? 90 48 ?? ?? ?? 5D C3") Then
+            RichTextBox1.AppendText("No Ads 4 Patch Failed" + vbNewLine)
         Else
             RichTextBox1.AppendText("No Ads 4 Patch Success" + vbNewLine)
         End If
 
-        'Invalid Key Patch
-        If Not Faceless.PatchAOB(targetPath, "7D 0E 48 8D 0D 8B 62 2F 00 E8", "75 0E 48 8D 0D 8B 62 2F 00 E8") Then
+
+        'Invalid Key Patch - Universal for all Laragon versions
+        If Not Faceless.PatchAOB(targetPath, "7D ?? 48 ?? ?? ?? ?? ?? ?? E8 ?? ?? ?? ?? EB ?? 48 ?? ?? ?? 48",
+                                 "75 ?? 48 ?? ?? ?? ?? ?? ?? E8 ?? ?? ?? ?? EB ?? 48 ?? ?? ?? 48") Then
             RichTextBox1.AppendText("Invalid Key Patch Failed" + vbNewLine)
         Else
             RichTextBox1.AppendText("Invalid Key Patch Success" + vbNewLine)
         End If
 
+
         'Your License data is not valid Patch
-        If Not Faceless.PatchAOB(targetPath, "0F 84 84 00 00 00 48 8B 55 B0", "0F 85 84 00 00 00 48 8B 55 B0") Then
+        If Not Faceless.PatchAOB(targetPath, "0F 84 ?? ?? ?? ?? 48 ?? ?? ?? 48 ?? ?? ?? E8 ?? ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? 48 ?? ?? ?? E8 ?? ?? ?? ?? 48",
+                                 "0F 85 ?? ?? ?? ?? 48 ?? ?? ?? 48 ?? ?? ?? E8 ?? ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? 48 ?? ?? ?? E8 ?? ?? ?? ?? 48") Then
             RichTextBox1.AppendText("Your License data is not valid Patch Failed" + vbNewLine)
         Else
             RichTextBox1.AppendText("Your License data is not valid Patch Success" + vbNewLine)
