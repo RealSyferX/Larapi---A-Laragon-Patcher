@@ -6,6 +6,7 @@ This tool makes Laragon quieter, cleaner, and more developer-friendly — no pop
 
 ## ✨ Features
 - **Hash/Integrity Check Bypass**: Bypasses MD5/SHA file integrity validation in latest Laragon versions
+- **Windows API Hash Bypass**: Intercepts and bypasses Windows Crypto API calls (CryptCreateHash, CryptHashData, BCryptHash, memcmp)
 - **License Validation Bypass**: Removes license key checks
 - **Ad Removal**: Eliminates all advertisement popups and nags
 - **Cutie Checks Removal**: Disables unnecessary validation dialogs
