@@ -178,7 +178,7 @@ Public Class Faceless
         End If
 
         'Hash/Integrity Check Bypass Patch 4 - Skip hash verification check
-        'NOPs out hash calculation call completely (all 5 bytes) and changes JE to JNE
+        'NOPs out hash calculation call completely (all 5 bytes) and changes JE to JMP
         If Not Faceless.PatchAOB(targetPath, "E8 ?? ?? ?? ?? 48 85 C0 74 ?? 48",
                                  "90 90 90 90 90 48 85 C0 EB ?? 48") Then
             RichTextBox1.AppendText("Hash Check Bypass 4 Patch Failed (pattern not found - may not be needed)" + vbNewLine)
@@ -206,8 +206,9 @@ Public Class Faceless
 
         'Windows API Hash Check Bypass Patch 3 - BCrypt hash comparison bypass
         'NOPs out complete API call (6 bytes) and XORs EAX to force zero/success return
-        If Not Faceless.PatchAOB(targetPath, "FF 15 ?? ?? ?? ?? 89 ?? 85 C0 0F 8? ?? ?? ?? ??",
-                                 "90 90 90 90 90 90 89 ?? 31 C0 90 EB ?? ?? ?? ??") Then
+        'Changes near conditional jump (6 bytes: 0F 8x) to JNE (0F 85) to invert logic
+        If Not Faceless.PatchAOB(targetPath, "FF 15 ?? ?? ?? ?? 89 ?? 85 C0 0F 84 ?? ?? ?? ??",
+                                 "90 90 90 90 90 90 89 ?? 31 C0 0F 85 ?? ?? ?? ??") Then
             RichTextBox1.AppendText("Windows API Hash Bypass 3 Patch Failed (pattern not found - may not be needed)" + vbNewLine)
         Else
             RichTextBox1.AppendText("Windows API Hash Bypass 3 Patch Success" + vbNewLine)
