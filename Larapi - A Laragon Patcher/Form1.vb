@@ -1,6 +1,19 @@
 Imports System.IO
 Imports Microsoft.Win32
 
+' Larapi - A Laragon Patcher
+' This tool patches Laragon to remove ads, license checks, and integrity/hash validation
+' Features:
+' - Hash/Integrity Check Bypass: Bypasses MD5/SHA file integrity validation
+' - Windows API Hash Bypass: Intercepts CryptCreateHash, CryptHashData, BCryptHash, and memcmp calls
+' - License Validation Bypass: Removes license key checks
+' - Ad Removal: Eliminates all advertisement popups and nags
+'
+' Windows Crypto API functions targeted:
+' - CryptCreateHash, CryptHashData, CryptGetHashParam (legacy Crypto API)
+' - BCryptHash, BCryptFinishHash (Cryptography API: Next Generation)
+' - memcmp/strcmp for hash comparison bypass
+
 Public Class Faceless
     Public Shared Function PatchAOB(filePath As String, originalPattern As String, patchPattern As String) As Boolean
         Try
@@ -134,6 +147,90 @@ Public Class Faceless
             RichTextBox1.AppendText("Your License data is not valid Patch Failed" + vbNewLine)
         Else
             RichTextBox1.AppendText("Your License data is not valid Patch Success" + vbNewLine)
+        End If
+
+
+        'Hash/Integrity Check Bypass Patch 1 - MD5/SHA hash comparison bypass
+        'This patches the conditional jump after hash comparison to always succeed
+        If Not Faceless.PatchAOB(targetPath, "E8 ?? ?? ?? ?? 84 C0 0F 84 ?? ?? ?? ?? 48 ?? ?? ?? E8",
+                                 "E8 ?? ?? ?? ?? 84 C0 90 E9 ?? ?? ?? ?? 48 ?? ?? ?? E8") Then
+            RichTextBox1.AppendText("Hash Check Bypass 1 Patch Failed (pattern not found - may not be needed)" + vbNewLine)
+        Else
+            RichTextBox1.AppendText("Hash Check Bypass 1 Patch Success" + vbNewLine)
+        End If
+
+        'Hash/Integrity Check Bypass Patch 2 - Skip file integrity validation
+        'Common pattern for file integrity check with JE (jump if equal) -> JNE (jump if not equal)
+        If Not Faceless.PatchAOB(targetPath, "E8 ?? ?? ?? ?? 85 C0 74 ?? 48 ?? ?? ?? 48 ?? ?? E8",
+                                 "E8 ?? ?? ?? ?? 85 C0 75 ?? 48 ?? ?? ?? 48 ?? ?? E8") Then
+            RichTextBox1.AppendText("Hash Check Bypass 2 Patch Failed (pattern not found - may not be needed)" + vbNewLine)
+        Else
+            RichTextBox1.AppendText("Hash Check Bypass 2 Patch Success" + vbNewLine)
+        End If
+
+        'Hash/Integrity Check Bypass Patch 3 - Return early from hash validation function
+        'This patches a function to skip hash validation by changing JE to JMP (unconditional)
+        If Not Faceless.PatchAOB(targetPath, "E8 ?? ?? ?? ?? 48 89 C? 48 85 ?? 74 ?? 48 8B",
+                                 "E8 ?? ?? ?? ?? 48 89 C? 48 85 ?? EB ?? 48 8B") Then
+            RichTextBox1.AppendText("Hash Check Bypass 3 Patch Failed (pattern not found - may not be needed)" + vbNewLine)
+        Else
+            RichTextBox1.AppendText("Hash Check Bypass 3 Patch Success" + vbNewLine)
+        End If
+
+        'Hash/Integrity Check Bypass Patch 4 - Skip hash verification check
+        'NOPs out hash calculation call completely (all 5 bytes) and changes JE to JMP
+        If Not Faceless.PatchAOB(targetPath, "E8 ?? ?? ?? ?? 48 85 C0 74 ?? 48",
+                                 "90 90 90 90 90 48 85 C0 EB ?? 48") Then
+            RichTextBox1.AppendText("Hash Check Bypass 4 Patch Failed (pattern not found - may not be needed)" + vbNewLine)
+        Else
+            RichTextBox1.AppendText("Hash Check Bypass 4 Patch Success" + vbNewLine)
+        End If
+
+        'Windows API Hash Check Bypass Patch 1 - CryptCreateHash/CryptHashData bypass
+        'NOPs out complete CALL instruction (6 bytes: FF 15 + 4 byte address) and changes JE to JMP
+        If Not Faceless.PatchAOB(targetPath, "FF 15 ?? ?? ?? ?? 85 C0 74 ?? 48 8D",
+                                 "90 90 90 90 90 90 85 C0 EB ?? 48 8D") Then
+            RichTextBox1.AppendText("Windows API Hash Bypass 1 Patch Failed (pattern not found - may not be needed)" + vbNewLine)
+        Else
+            RichTextBox1.AppendText("Windows API Hash Bypass 1 Patch Success" + vbNewLine)
+        End If
+
+        'Windows API Hash Check Bypass Patch 2 - CryptGetHashParam result check bypass
+        'Bypasses the check of hash parameter retrieval results by changing JE to JNE
+        If Not Faceless.PatchAOB(targetPath, "FF 15 ?? ?? ?? ?? 85 C0 0F 84 ?? ?? ?? ?? 48 8B",
+                                 "FF 15 ?? ?? ?? ?? 85 C0 0F 85 ?? ?? ?? ?? 48 8B") Then
+            RichTextBox1.AppendText("Windows API Hash Bypass 2 Patch Failed (pattern not found - may not be needed)" + vbNewLine)
+        Else
+            RichTextBox1.AppendText("Windows API Hash Bypass 2 Patch Success" + vbNewLine)
+        End If
+
+        'Windows API Hash Check Bypass Patch 3 - BCrypt hash comparison bypass
+        'NOPs out complete API call (6 bytes) and XORs EAX to force zero/success return
+        'Changes near conditional jump (6 bytes: 0F 8x) to JNE (0F 85) to invert logic
+        If Not Faceless.PatchAOB(targetPath, "FF 15 ?? ?? ?? ?? 89 ?? 85 C0 0F 84 ?? ?? ?? ??",
+                                 "90 90 90 90 90 90 89 ?? 31 C0 0F 85 ?? ?? ?? ??") Then
+            RichTextBox1.AppendText("Windows API Hash Bypass 3 Patch Failed (pattern not found - may not be needed)" + vbNewLine)
+        Else
+            RichTextBox1.AppendText("Windows API Hash Bypass 3 Patch Success" + vbNewLine)
+        End If
+
+        'Windows API Hash Check Bypass Patch 4 - memcmp/strcmp hash comparison bypass
+        'Bypasses hash comparison after calculation by XORing EAX to force equal (zero) result
+        'Changes JNE to JMP to skip error handling
+        If Not Faceless.PatchAOB(targetPath, "E8 ?? ?? ?? ?? 85 C0 75 ?? 48 8B",
+                                 "E8 ?? ?? ?? ?? 31 C0 EB ?? 48 8B") Then
+            RichTextBox1.AppendText("Windows API Hash Bypass 4 Patch Failed (pattern not found - may not be needed)" + vbNewLine)
+        Else
+            RichTextBox1.AppendText("Windows API Hash Bypass 4 Patch Success" + vbNewLine)
+        End If
+
+        'Windows API Hash Check Bypass Patch 5 - Direct hash buffer comparison bypass
+        'Bypasses direct memory comparison by XORing EAX to force success and changing JE to JMP
+        If Not Faceless.PatchAOB(targetPath, "E8 ?? ?? ?? ?? 84 C0 74 ?? 48 8D",
+                                 "E8 ?? ?? ?? ?? 31 C0 EB ?? 48 8D") Then
+            RichTextBox1.AppendText("Windows API Hash Bypass 5 Patch Failed (pattern not found - may not be needed)" + vbNewLine)
+        Else
+            RichTextBox1.AppendText("Windows API Hash Bypass 5 Patch Success" + vbNewLine)
         End If
 
     End Sub
