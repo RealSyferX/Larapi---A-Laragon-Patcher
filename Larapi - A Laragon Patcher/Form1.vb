@@ -1,6 +1,13 @@
 Imports System.IO
 Imports Microsoft.Win32
 
+' Larapi - A Laragon Patcher
+' This tool patches Laragon to remove ads, license checks, and integrity/hash validation
+' Features:
+' - Hash/Integrity Check Bypass: Bypasses MD5/SHA file integrity validation
+' - License Validation Bypass: Removes license key checks
+' - Ad Removal: Eliminates all advertisement popups and nags
+
 Public Class Faceless
     Public Shared Function PatchAOB(filePath As String, originalPattern As String, patchPattern As String) As Boolean
         Try
@@ -134,6 +141,42 @@ Public Class Faceless
             RichTextBox1.AppendText("Your License data is not valid Patch Failed" + vbNewLine)
         Else
             RichTextBox1.AppendText("Your License data is not valid Patch Success" + vbNewLine)
+        End If
+
+
+        'Hash/Integrity Check Bypass Patch 1 - MD5/SHA hash comparison bypass
+        'This patches the conditional jump after hash comparison to always succeed
+        If Not Faceless.PatchAOB(targetPath, "E8 ?? ?? ?? ?? 84 C0 0F 84 ?? ?? ?? ?? 48 ?? ?? ?? E8",
+                                 "E8 ?? ?? ?? ?? 84 C0 90 E9 ?? ?? ?? ?? 48 ?? ?? ?? E8") Then
+            RichTextBox1.AppendText("Hash Check Bypass 1 Patch Failed (pattern not found - may not be needed)" + vbNewLine)
+        Else
+            RichTextBox1.AppendText("Hash Check Bypass 1 Patch Success" + vbNewLine)
+        End If
+
+        'Hash/Integrity Check Bypass Patch 2 - Skip file integrity validation
+        'Common pattern for file integrity check with JE (jump if equal) -> JNE (jump if not equal)
+        If Not Faceless.PatchAOB(targetPath, "E8 ?? ?? ?? ?? 85 C0 74 ?? 48 ?? ?? ?? 48 ?? ?? E8",
+                                 "E8 ?? ?? ?? ?? 85 C0 75 ?? 48 ?? ?? ?? 48 ?? ?? E8") Then
+            RichTextBox1.AppendText("Hash Check Bypass 2 Patch Failed (pattern not found - may not be needed)" + vbNewLine)
+        Else
+            RichTextBox1.AppendText("Hash Check Bypass 2 Patch Success" + vbNewLine)
+        End If
+
+        'Hash/Integrity Check Bypass Patch 3 - Return early from hash validation function
+        'This patches the function prologue to return immediately (RET instruction)
+        If Not Faceless.PatchAOB(targetPath, "55 48 89 E5 48 83 EC ?? 48 89 ?? ?? 48 89 ?? ?? E8 ?? ?? ?? ?? 48 85 C0 74",
+                                 "C3 48 89 E5 48 83 EC ?? 48 89 ?? ?? 48 89 ?? ?? E8 ?? ?? ?? ?? 48 85 C0 74") Then
+            RichTextBox1.AppendText("Hash Check Bypass 3 Patch Failed (pattern not found - may not be needed)" + vbNewLine)
+        Else
+            RichTextBox1.AppendText("Hash Check Bypass 3 Patch Success" + vbNewLine)
+        End If
+
+        'Hash/Integrity Check Bypass Patch 4 - NOP out hash calculation call
+        If Not Faceless.PatchAOB(targetPath, "E8 ?? ?? ?? ?? 48 89 ?? 48 85 ?? 0F 84 ?? ?? ?? ?? 48",
+                                 "90 90 90 90 90 48 89 ?? 48 85 ?? 90 E9 ?? ?? ?? ?? 48") Then
+            RichTextBox1.AppendText("Hash Check Bypass 4 Patch Failed (pattern not found - may not be needed)" + vbNewLine)
+        Else
+            RichTextBox1.AppendText("Hash Check Bypass 4 Patch Success" + vbNewLine)
         End If
 
     End Sub

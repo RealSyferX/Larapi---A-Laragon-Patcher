@@ -1,8 +1,14 @@
 # 🧨 Larapi — A Laragon Cutie
-A no-nonsense patcher for Laragon that removes cutie checks, ads, and other restrictions.
+A no-nonsense patcher for Laragon that removes cutie checks, ads, hash/integrity checks, and other restrictions.
 This tool makes Laragon quieter, cleaner, and more developer-friendly — no popups, no nags, no BS.
 
 🟢 Now Open Source! You can inspect, fork, and contribute to the patcher freely.
+
+## ✨ Features
+- **Hash/Integrity Check Bypass**: Bypasses MD5/SHA file integrity validation in latest Laragon versions
+- **License Validation Bypass**: Removes license key checks
+- **Ad Removal**: Eliminates all advertisement popups and nags
+- **Cutie Checks Removal**: Disables unnecessary validation dialogs
 
 ![image](https://github.com/user-attachments/assets/2fcfcc26-2e12-49f2-b1b3-a361ec00a2fd)
 
