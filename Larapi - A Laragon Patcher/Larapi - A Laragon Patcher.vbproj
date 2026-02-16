@@ -17,6 +17,9 @@
     <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
     <NoStdLib>true</NoStdLib>
     <VBRuntime>None</VBRuntime>
+    <!-- Determine NuGet packages path based on OS -->
+    <NuGetPackagesPath Condition="'$(OS)' == 'Windows_NT' And '$(NuGetPackagesPath)' == ''">$(USERPROFILE)\.nuget\packages\</NuGetPackagesPath>
+    <NuGetPackagesPath Condition="'$(OS)' != 'Windows_NT' And '$(NuGetPackagesPath)' == ''">$(HOME)/.nuget/packages/</NuGetPackagesPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -58,43 +61,43 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="mscorlib">
-      <HintPath>/home/runner/.nuget/packages/microsoft.netframework.referenceassemblies.net472/1.0.3/build/.NETFramework/v4.7.2/mscorlib.dll</HintPath>
+      <HintPath>$(NuGetPackagesPath)microsoft.netframework.referenceassemblies.net472/1.0.3/build/.NETFramework/v4.7.2/mscorlib.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualBasic">
-      <HintPath>/home/runner/.nuget/packages/microsoft.netframework.referenceassemblies.net472/1.0.3/build/.NETFramework/v4.7.2/Microsoft.VisualBasic.dll</HintPath>
+      <HintPath>$(NuGetPackagesPath)microsoft.netframework.referenceassemblies.net472/1.0.3/build/.NETFramework/v4.7.2/Microsoft.VisualBasic.dll</HintPath>
     </Reference>
     <Reference Include="System">
-      <HintPath>/home/runner/.nuget/packages/microsoft.netframework.referenceassemblies.net472/1.0.3/build/.NETFramework/v4.7.2/System.dll</HintPath>
+      <HintPath>$(NuGetPackagesPath)microsoft.netframework.referenceassemblies.net472/1.0.3/build/.NETFramework/v4.7.2/System.dll</HintPath>
     </Reference>
     <Reference Include="System.Data">
-      <HintPath>/home/runner/.nuget/packages/microsoft.netframework.referenceassemblies.net472/1.0.3/build/.NETFramework/v4.7.2/System.Data.dll</HintPath>
+      <HintPath>$(NuGetPackagesPath)microsoft.netframework.referenceassemblies.net472/1.0.3/build/.NETFramework/v4.7.2/System.Data.dll</HintPath>
     </Reference>
     <Reference Include="System.Deployment">
-      <HintPath>/home/runner/.nuget/packages/microsoft.netframework.referenceassemblies.net472/1.0.3/build/.NETFramework/v4.7.2/System.Deployment.dll</HintPath>
+      <HintPath>$(NuGetPackagesPath)microsoft.netframework.referenceassemblies.net472/1.0.3/build/.NETFramework/v4.7.2/System.Deployment.dll</HintPath>
     </Reference>
     <Reference Include="System.Drawing">
-      <HintPath>/home/runner/.nuget/packages/microsoft.netframework.referenceassemblies.net472/1.0.3/build/.NETFramework/v4.7.2/System.Drawing.dll</HintPath>
+      <HintPath>$(NuGetPackagesPath)microsoft.netframework.referenceassemblies.net472/1.0.3/build/.NETFramework/v4.7.2/System.Drawing.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Forms">
-      <HintPath>/home/runner/.nuget/packages/microsoft.netframework.referenceassemblies.net472/1.0.3/build/.NETFramework/v4.7.2/System.Windows.Forms.dll</HintPath>
+      <HintPath>$(NuGetPackagesPath)microsoft.netframework.referenceassemblies.net472/1.0.3/build/.NETFramework/v4.7.2/System.Windows.Forms.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml">
-      <HintPath>/home/runner/.nuget/packages/microsoft.netframework.referenceassemblies.net472/1.0.3/build/.NETFramework/v4.7.2/System.Xml.dll</HintPath>
+      <HintPath>$(NuGetPackagesPath)microsoft.netframework.referenceassemblies.net472/1.0.3/build/.NETFramework/v4.7.2/System.Xml.dll</HintPath>
     </Reference>
     <Reference Include="System.Core">
-      <HintPath>/home/runner/.nuget/packages/microsoft.netframework.referenceassemblies.net472/1.0.3/build/.NETFramework/v4.7.2/System.Core.dll</HintPath>
+      <HintPath>$(NuGetPackagesPath)microsoft.netframework.referenceassemblies.net472/1.0.3/build/.NETFramework/v4.7.2/System.Core.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml.Linq">
-      <HintPath>/home/runner/.nuget/packages/microsoft.netframework.referenceassemblies.net472/1.0.3/build/.NETFramework/v4.7.2/System.Xml.Linq.dll</HintPath>
+      <HintPath>$(NuGetPackagesPath)microsoft.netframework.referenceassemblies.net472/1.0.3/build/.NETFramework/v4.7.2/System.Xml.Linq.dll</HintPath>
     </Reference>
     <Reference Include="System.Data.DataSetExtensions">
-      <HintPath>/home/runner/.nuget/packages/microsoft.netframework.referenceassemblies.net472/1.0.3/build/.NETFramework/v4.7.2/System.Data.DataSetExtensions.dll</HintPath>
+      <HintPath>$(NuGetPackagesPath)microsoft.netframework.referenceassemblies.net472/1.0.3/build/.NETFramework/v4.7.2/System.Data.DataSetExtensions.dll</HintPath>
     </Reference>
     <Reference Include="System.Net.Http">
-      <HintPath>/home/runner/.nuget/packages/microsoft.netframework.referenceassemblies.net472/1.0.3/build/.NETFramework/v4.7.2/System.Net.Http.dll</HintPath>
+      <HintPath>$(NuGetPackagesPath)microsoft.netframework.referenceassemblies.net472/1.0.3/build/.NETFramework/v4.7.2/System.Net.Http.dll</HintPath>
     </Reference>
     <Reference Include="System.Resources.Extensions">
-      <HintPath>/home/runner/.nuget/packages/system.resources.extensions/4.6.0/lib/netstandard2.0/System.Resources.Extensions.dll</HintPath>
+      <HintPath>$(NuGetPackagesPath)system.resources.extensions/4.6.0/lib/netstandard2.0/System.Resources.Extensions.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
