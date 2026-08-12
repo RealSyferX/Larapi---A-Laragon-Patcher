@@ -2,7 +2,8 @@
 
 # Don't cry dude, This Patch/Cracks are no longer Maintained.
 
-- *Go here instead* -> [RivalLocal Repo](https://github.com/RealSyferX/RivalLocal)
+
+# *Go here instead* -> [RivalLocal Repo](https://github.com/RealSyferX/RivalLocal)
 
 # Laragon License Bypass - Patch Documentation
 
